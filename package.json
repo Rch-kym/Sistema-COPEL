@@ -1,10 +1,10 @@
 {
   "name": "central-copel",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "private": true,
   "description": "Protótipo da Central COPEL — NRS Extremo Sul",
   "scripts": {
-    "check": "node --check app.js && node --check scripts/build.mjs",
+    "check": "node --check app.js && node --check trello.js && node --check trello-core.js && node --check review.js && node --check review-core.js && node --check scripts/build.mjs",
     "build": "node scripts/build.mjs"
   }
 }

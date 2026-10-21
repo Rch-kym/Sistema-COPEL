@@ -1,0 +1,16 @@
+const assert=require('node:assert/strict'),M=require('../monitor-core.js');
+const doc={kind:'document',number:'100001',capturedAt:'2026-10-21T15:00:00Z'},signature={...doc,kind:'signature'};
+assert.equal(M.inPeriod({...doc,occurredAt:'2026-08-01T10:00:00-03:00'},'2026-10-21'),false);
+assert.equal(M.inPeriod({...doc,occurredAt:'2026-10-21T00:00:00-03:00'},'2026-10-21'),true);
+assert.equal(M.inPeriod({...doc,occurredAt:'2026-10-21T02:59:59Z'},'2026-10-21'),false);
+assert.equal(M.inPeriod({...signature,occurredAt:'2026-10-21T12:00:00-03:00'},'2026-10-21'),true);
+assert.equal(M.inPeriod(doc,'2026-10-21'),false,'capture time must never stand in for SEI event date');
+assert.equal(M.inPeriod({...doc,occurredAt:'2026-08-01T10:00:00-03:00'},'2026-08-01'),true);
+assert.equal(M.inPeriod({...doc,occurredAt:'2026-10-21'},'2026-10-21'),true);
+assert.equal(M.validSince('2026-02-30'),false);assert.equal(M.validSince(''),false);assert.equal(M.validSince('2024-02-29'),true);
+assert.equal(M.inPeriod({...doc,kind:'movement',occurredAt:'2026-10-21T12:00:00Z'},'2026-10-21'),false);
+const movements=[{date:'2026-08-01T12:00:00Z',unit:'COPEL',description:'Inclusão do documento 100001'},{date:'2026-10-21T12:00:00Z',unit:'COPEL',description:'Documento 100001 assinado por responsável'}];
+assert.equal(M.inPeriod(doc,'2026-10-21',movements),false);assert.equal(M.inPeriod(signature,'2026-10-21',movements),true);
+assert.equal(M.inPeriod(signature,'2026-10-21',[],{movements:movements.map(m=>JSON.stringify([m.date,m.unit,m.description]))}),true);
+assert.equal(M.inPeriod(doc,'2026-10-21',[],{documents:{'100001':{insertedAt:'2026-08-01T12:00:00Z'}}}),false);
+console.log('period: cutoff inclusivo, fuso Brasília, documento antigo/assinatura recente, datas desconhecidas, alteração retroativa e validação passaram.');

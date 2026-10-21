@@ -1,3 +1,5 @@
+Leia primeiro FILTRO-POR-DATA.md para esta atualização.
+
 # Central COPEL 0.6 + Monitor SEI 0.4
 
 ## O que muda para você

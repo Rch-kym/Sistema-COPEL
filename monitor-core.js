@@ -35,5 +35,21 @@
   baseline.historyReady=!!historyReady||moves.length>0||snapshot.movementsComplete===true;
   return {baseline,events};
  }
- const api={observe,evidence,relevant,dates};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.CopelMonitor=api;
+ function localDay(value=new Date()){
+  if(typeof value==='string'&&validSince(value))return value;
+  const d=new Date(value);if(!Number.isFinite(d.getTime()))return null;
+  const parts=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(d);
+  const get=type=>parts.find(p=>p.type===type).value;return get('year')+'-'+get('month')+'-'+get('day');
+ }
+ function validSince(value){if(typeof value!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(value))return false;const d=new Date(value+'T12:00:00Z');return Number.isFinite(d.getTime())&&d.toISOString().slice(0,10)===value}
+ function eventDate(event,movements=[],baseline=null){
+  if(event?.occurredAt&&Number.isFinite(Date.parse(event.occurredAt)))return event.occurredAt;
+  if(!relevant(event))return null;
+  const history=[...movements];for(const key of baseline?.movements||[])try{const [date,unit,description]=JSON.parse(key);history.push({date,unit,description})}catch{}
+  const found=dates(history,event.number,event.kind);
+  if(event.kind==='signature'&&event.eventKey){try{const [date]=JSON.parse(event.eventKey);if(Number.isFinite(Date.parse(date)))return date}catch{}}
+  return (event.kind==='document'?found[0]?.date||baseline?.documents?.[event.number]?.insertedAt:found.at(-1)?.date)||null;
+ }
+ function inPeriod(event,since,movements=[],baseline=null){if(!relevant(event)||!validSince(since))return false;const occurredAt=eventDate(event,movements,baseline);return !!occurredAt&&localDay(occurredAt)>=since}
+ const api={observe,evidence,relevant,dates,localDay,validSince,eventDate,inPeriod};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.CopelMonitor=api;
 })(globalThis);

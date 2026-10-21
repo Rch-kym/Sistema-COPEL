@@ -1,14 +1,36 @@
-# Central COPEL — versão 0.4
+# Central COPEL — versão 0.5
 
 ## Atualizar o site
 
 1. Antes de atualizar, exporte um backup em Relatórios na Central atual.
-2. Extraia Central-COPEL-v0.4-GitHub.zip e envie o conteúdo extraído para a raiz do mesmo repositório GitHub. Substitua os arquivos antigos e preserve a pasta assets. Não envie apenas o ZIP.
+2. Extraia Central-COPEL-v0.5-GitHub.zip e envie o conteúdo extraído para a raiz do mesmo repositório GitHub. Substitua os arquivos antigos e preserve a pasta assets. Não envie apenas o ZIP.
 3. Aguarde a publicação do GitHub Pages e atualize o site com Ctrl+F5.
 4. Os dados continuam no mesmo navegador e endereço. Não limpe os dados do navegador. Não precisa importar o Trello novamente se os processos já estão cadastrados.
-5. Instale o conector v0.2 seguindo seu LEIA-ME. Os pacotes do site e do conector são separados.
+5. Instale o conector v0.3 seguindo seu LEIA-ME. A Central v0.5 também funciona com o v0.2, mas sem o histórico completo. Os pacotes do site e do conector são separados.
 
 Nunca envie o JSON privado do Trello, backups ou consultas dos processos ao repositório público. Este pacote não inclui a exportação real do quadro.
+
+## Tempo e parada (novo na v0.5)
+
+A Central guarda, para cada processo consultado, uma linha do tempo de andamentos do SEI que não expira (as consultas completas continuam limitadas a oito por processo). Dela saem:
+
+- **Dias úteis sem movimentação**, calculados com feriados nacionais, Carnaval, Sexta-feira Santa, Corpus Christi e 2 de Julho. Feriados municipais e pontos facultativos entram em `settings.timing.extraHolidays`.
+- **Atenção a partir de 5 dias úteis e crítico a partir de 10**, valores padrão. Podem ser trocados globalmente ou por etapa em `settings.timing`.
+- **Unidade atual, tempo na unidade e tempo gasto por unidade.** O tempo entre um envio e o recebimento seguinte é atribuído a quem recebeu. É uma estimativa.
+- **Data real de inclusão dos documentos**, quando o andamento registra a inclusão. Aparece nos avisos de documento novo.
+- Tempo por etapa do Trello e resumo de desempenho (mediana e P90) para os concluídos, em `timingReport()`.
+
+Os avisos de parada entram nos alertas já existentes. O menu **Tempo e prazos** reúne três abas:
+
+- **Parados:** processos ordenados por dias úteis sem movimentação, filtro por situação e, ao clicar, a linha do tempo, a unidade atual e o tempo por unidade.
+- **Desempenho:** mediana e P90 por etapa do Trello e por unidade, e a duração dos concluídos. Resultados com menos de 5 processos aparecem como amostra pequena.
+- **Limites e feriados:** limites de atenção e crítico (globais ou por etapa) e feriados extras. Ficam salvos neste navegador.
+
+O botão Exportar CSV gera uma planilha da aba aberta (separador ponto e vírgula, abre direto no Excel). O botão Backup baixa a base completa; faça um antes de atualizar o site.
+
+Os padrões de texto que classificam os andamentos (enviado, recebido, documento gerado, concluído) foram escritos sem acesso a um processo real do SEI Bahia. Confira no teste piloto: se um tipo de andamento não for reconhecido, ele conta como movimentação comum e a parada continua correta.
+
+Testes: `npm test` (cálculos de dias úteis, parada, unidades, CSV).
 
 ## Revisão na abertura
 

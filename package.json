@@ -1,6 +1,6 @@
 {
   "name": "central-copel",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "private": true,
   "description": "Protótipo da Central COPEL — NRS Extremo Sul",
   "scripts": {

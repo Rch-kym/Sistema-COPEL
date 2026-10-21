@@ -48,3 +48,8 @@ tr.tp-sel td{background:#eef2fa}
 .tp-bars .tp-bar-row .tp-bar{grid-column:1/-1}
 .tp-bars small{text-align:right}
 @media(max-width:1420px)and (min-width:981px){.tp-unit-col{display:none}.tp-unit-inline{display:block}}
+
+/* Monitoramento: estado, expectativa e próxima ação sempre no mesmo cartão. */
+.monitor-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin:10px 0 20px}.monitor-facts>div{background:#f5f7fc;border:1px solid #e3e9f3;border-radius:9px;padding:14px}.monitor-facts span{display:block;font-size:12px;color:#52657d;margin-bottom:7px}.monitor-facts strong{display:block;font-size:14px;color:#20334f;line-height:1.5}.monitor-help{margin-top:18px;border-top:1px solid #e1e7f0;padding-top:14px;color:#52657d;font-size:13px;line-height:1.7}.monitor-help summary{font-weight:600;color:#294e9b;cursor:pointer}.monitor-help ol{padding-left:21px}.monitor-card .inline-note{margin-top:14px}.monitor-banner{display:flex;gap:12px;justify-content:space-between;align-items:center;padding:17px 20px;background:#fff3dc;color:#754000;border:1px solid #e8c78a;border-radius:10px;margin-bottom:22px;text-decoration:none}.monitor-banner span{font-size:13px}:focus-visible{outline:3px solid #b57516;outline-offset:3px}@media(max-width:600px){.monitor-banner{align-items:flex-start;flex-direction:column}.monitor-facts{grid-template-columns:1fr}.monitor-card .card-head{align-items:flex-start;gap:12px;flex-direction:column}}
+
+.manual-import{border:1px solid var(--line);border-radius:10px;background:white;margin-bottom:22px}.manual-import>summary{padding:18px 22px;color:var(--blue);font-size:12px;font-weight:600}.manual-import>.card{border:0;border-top:1px solid var(--line);border-radius:0}.manual-import+.section-gap{margin-top:22px}

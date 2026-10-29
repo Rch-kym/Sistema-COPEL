@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {addDays,afmState,plannedNotices,totals,parseSupplier} from '../src/domain.mjs';
+assert.equal(addDays('2026-10-29',5),'2026-11-03');
+assert.equal(addDays('2026-10-30',2,'business',['2026-11-02']),'2026-11-04');
+const a={id:'afm',processId:'p',number:'teste',amountCents:10000,offeredAt:'2026-10-01',signatureDays:5,deliveryDays:15,dayMode:'calendar'};
+assert.equal(afmState(a,[],'2026-10-06').status,'signature_pending');assert.equal(afmState(a,[],'2026-10-07').status,'signature_overdue');
+const signed={...a,supplierSignedAt:'2026-10-04'};assert.equal(afmState(signed,[],'2026-10-19').status,'delivery_pending');assert.equal(afmState(signed,[],'2026-10-20').status,'delivery_overdue');
+const partial=[{afmId:'afm',amountCents:3000}];assert.equal(afmState(signed,partial,'2026-10-05').status,'partial');assert.equal(afmState(signed,[...partial,{afmId:'afm',amountCents:7000}],'2026-10-25').status,'received');
+assert.match(plannedNotices({...a,supplierSignedAt:'2026-10-04'},[],'2026-10-04')[0].title,/AFM assinada$/);assert.match(plannedNotices({...a,supplierSignedAt:'2026-10-08'},[],'2026-10-08')[0].title,/após o prazo/);
+assert.deepEqual(totals({processes:[{estimatedCents:20000}],afms:[a],receipts:partial,payments:[{amountCents:1000}]}),{estimated:20000,contracted:10000,delivered:3000,paid:1000});
+const parsed=parseSupplier('Razão social: Fornecedor Exemplo\nCNPJ: 12.345.678/0001-95\nE-mail: equipe@example.com\nTelefone: (73) 99999-1234');assert.equal(parsed.cnpj,'12345678000195');assert.equal(parsed.email,'equipe@example.com');assert.equal(parsed.phone,'(73) 99999-1234');assert.equal(parsed.name,'Fornecedor Exemplo');
+console.log('PASS: prazos inclusivos, dias úteis com feriado, assinatura no prazo/atrasada, entrega parcial/integral, totais distintos e leitura dos contatos.');

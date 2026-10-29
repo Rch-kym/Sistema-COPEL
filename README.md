@@ -1,3 +1,5 @@
+> **Atualização 0.8.0:** a versão com Supabase está na pasta [compartilhada](compartilhada/README.md). Ela tem autenticação, banco central e edição exclusiva do administrador. A publicação usa o workflow `Central COPEL compartilhada`; consulte as etapas e pendências naquele guia. A documentação abaixo descreve a versão local anterior.
+
 # Central COPEL 0.6
 
 Painel local de acompanhamento de processos do NRS Extremo Sul. Use com o Monitor SEI 0.4.

@@ -1,4 +1,4 @@
-> **Atualização 0.8.0:** a versão com Supabase está na pasta [compartilhada](compartilhada/README.md). Ela tem autenticação, banco central e edição exclusiva do administrador. A publicação usa o workflow `Central COPEL compartilhada`; consulte as etapas e pendências naquele guia. A documentação abaixo descreve a versão local anterior.
+> **Atualização 0.8.0:** a versão com Supabase está na pasta [compartilhada](compartilhada/README.md). Ela tem autenticação, banco central e edição operacional por colaboradores e administração exclusiva do responsável. A publicação usa o workflow `Central COPEL compartilhada`; consulte as etapas e pendências naquele guia. A documentação abaixo descreve a versão local anterior.
 
 # Central COPEL 0.6
 

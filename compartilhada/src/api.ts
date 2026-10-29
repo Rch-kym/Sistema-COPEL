@@ -28,7 +28,7 @@ export async function put(kind:string,p:any){const {id,revision,updatedAt,kind:i
 export async function notice(n:any){const {error}=await supabase.from('copel_notices').insert({event_key:n.eventKey,afm_id:n.afmId||null,process_id:n.processId||null,kind:n.kind,title:n.title,detail:n.detail,occurred_at:n.occurredAt||null});if(error&&error.code!=='23505')throw error}
 export async function jobs(){return checked(await supabase.rpc('copel_check_deadlines'))}
 export async function action(type:string,payload:any){
- const role=checked(await supabase.rpc('copel_role'));if(type!=='read'&&role!=='admin')throw Error('Seu acesso permite apenas consulta.');let result:any={};
+ const role=checked(await supabase.rpc('copel_role'));const business=['process','supplier','afm','receipt','payment','task'];if(type!=='read'&&role!=='admin'&&!(role==='editor'&&business.includes(type)))throw Error('Sua conta não tem permissão para esta alteração.');let result:any={};
  if(schemas[type]){
   const parsed=schemas[type].safeParse(payload);if(!parsed.success)throw Error(parsed.error.issues[0]?.message||'Confira os campos.');const p=parsed.data;
   if(type==='receipt'||type==='payment'){
@@ -37,7 +37,7 @@ export async function action(type:string,payload:any){
    else {checked(await supabase.from('copel_records').insert({id:submissionId,kind:type,natural_key:naturalKey(type,p),data}));result.id=submissionId}
   }else result.id=await put(type,p);
  }else if(type==='settings'){checked(await supabase.from('copel_settings').update({data:payload}).eq('id',true))}
- else if(type==='member'){checked(await supabase.from('copel_members').upsert({email:payload.email.trim().toLowerCase(),role:'viewer'}))}
+ else if(type==='member'){checked(await supabase.from('copel_members').upsert({email:payload.email.trim().toLowerCase(),role:payload.role==='editor'?'editor':'viewer'}))}
  else if(type==='read'){const user=checked(await supabase.auth.getUser()).user;checked(await supabase.from('copel_notice_reads').upsert({notice_id:payload.id,user_id:user.id}))}
  else if(type==='task'){const p=(await records('process')).find(p=>p.id===payload.id);if(!p||!p.legacy?.tasks?.[payload.index])throw Error('Item do checklist não encontrado.');p.legacy.tasks[payload.index].done=!!payload.done;await put('process',{...p,revision:payload.revision})}
  else if(type==='import'){result=payload?.format==='copel-cloud-v1'?await restoreBackup(payload):await importData(payload)}

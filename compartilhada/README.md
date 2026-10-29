@@ -19,17 +19,17 @@ npm run build
 npm run dev
 ```
 
-`?demo=1` abre dados fictícios para conferir a interface. A demonstração não permite gravar dados. O site normal exige login; somente o administrador pode alterar registros e liberar e-mails de leitores.
+`?demo=1` abre dados fictícios para conferir a interface. A demonstração não permite gravar dados. O site normal exige login; colaboradores autorizados podem atualizar dados operacionais; somente o administrador gerencia configurações e acessos.
 
-## Publicação pendente no GitHub
+## Publicação e acesso
 
-1. Enviar estas alterações ao repositório `Rch-kym/Sistema-COPEL`.
+1. O código está no repositório `Rch-kym/Sistema-COPEL` e a aplicação está publicada em https://rch-kym.github.io/Sistema-COPEL/.
 2. Em Settings > Pages, selecionar **GitHub Actions** como origem. O workflow `Central COPEL compartilhada` compila e publica `compartilhada/dist`.
 3. No Supabase > Authentication > URL Configuration, configurar Site URL e Redirect URLs com a URL real do GitHub Pages, incluindo o caminho `/Sistema-COPEL/`. Essas configurações do Auth não foram alteradas por esta migração. A aplicação solicita retorno para a URL em que foi aberta, mas o Supabase exige que ela esteja autorizada.
 4. Abrir o site publicado, selecionar **Primeiro acesso? Criar conta**, cadastrar `akymrocha@gmail.com` com uma senha própria e confirmar o e-mail. A reserva no banco vincula automaticamente essa conta como administradora.
 5. Importar um backup JSON do sistema anterior em Configurações. Um backup `copel-cloud-v1` só pode ser restaurado com a base vazia, com validação em uma única transação. A importação antiga preserva processos existentes e pode ser repetida após falha de conexão.
 
-A atualização ainda não está publicada no repositório remoto. Não mudar o domínio do site anterior até conferir a nova versão e importar os dados necessários. O piloto anterior e sua rotina permanecem disponíveis durante essa transição; pausar sua rotina após concluir a migração, para evitar manter duas bases ativas.
+A publicação é feita pelo GitHub Actions. Os dados de negócio e os endereços liberados ficam no Supabase, separados do código público. O piloto anterior e sua rotina permanecem disponíveis durante essa transição; pausar sua rotina após concluir a migração, para evitar manter duas bases ativas.
 
 ## O que está conectado
 
@@ -46,3 +46,9 @@ A atualização ainda não está publicada no repositório remoto. Não mudar o 
 Envio de e-mails de alerta (provedor e remetente), consulta automática ao SEI e API da Casa dos Dados. A interface identifica essas conexões como pendentes. A rotina do Supabase verifica os dados já cadastrados; não busca documentos no SEI. A importação de atestado sugere conferência; só o administrador confirma recebimento.
 
 Os arquivos SQL em `sql/` documentam o que foi aplicado. Não reaplicá-los em um projeto já configurado. `sql/test-permissions.sql` testa com usuários fictícios em transação e termina com rollback. A auditoria técnica fica no esquema privado e não é incluída na exportação comum da interface. Preferências e avisos do backup não substituem as regras e permissões da nova base.
+
+## Importação do Trello e colaboradores
+
+A importação aceita o JSON de um quadro do Trello. Consolida cartões com o mesmo SEI, priorizando o cartão ativo mais recente e preservando a origem e os itens distintos dos checklists. Modelos e cartões sem um único SEI válido no título ficam fora da importação. Referências na descrição não são usadas como número principal do processo. A coluna e os checklists não confirmam assinatura, recebimento ou pagamento. Reimportações preservam processos já cadastrados.
+
+A permissão `editor` libera processos, fornecedores, AFMs, assinaturas, recebimentos, pagamentos e checklists. Preferências, importações em lote, exportações e gestão de acessos são exclusivas do administrador. As restrições são aplicadas no banco e na interface. A conta do colaborador deve confirmar o e-mail para acessar.
